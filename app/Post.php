@@ -3,6 +3,7 @@
 namespace App;
 
 
+use think\db\Builder;
 
 class Post extends BaseModel
 {
@@ -28,5 +29,17 @@ class Post extends BaseModel
     {
         return $this->hasMany(\App\Models\Zan::class);
     }
-
+    //属于某个作者的文章
+    public function scopeAuthorBy($query,$user_id){
+        return $query->where('user_id',$user_id);
+    }
+    public function postTopics(){
+        return $this->hasMany(\App\PostTopic::class,'post_id','id');
+    }
+    //不属于某个专题的文字
+    public function scopeTopicNotBy($query,$topic_id){
+        return $query->doesntHave('postTopics','and',function($q) use($topic_id){
+           $q->where('topic_id',$topic_id);
+        });
+    }
 }

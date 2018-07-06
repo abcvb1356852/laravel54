@@ -42,4 +42,11 @@ class Post extends BaseModel
            $q->where('topic_id',$topic_id);
         });
     }
+    protected static function boot()
+    {
+        parent::boot();
+        static::addGlobalScope('avaiable',function($builder){
+            $builder->whereIn('status',[0,1]);
+        });
+    }
 }
